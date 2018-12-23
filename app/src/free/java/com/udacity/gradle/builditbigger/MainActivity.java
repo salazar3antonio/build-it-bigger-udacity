@@ -8,13 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
-import com.studentproject.jokes_java_lib.Joke;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.studentproject.myandroidlibrary.JokeDisplayActivity;
-import com.udacity.gradle.builditbigger.R;
-import com.udacity.gradle.builditbigger.backend.MyEndpoint;
+import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
+
+import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -54,10 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
 
-        EndpointsAsyncTask endpointsAsyncTask = new EndpointsAsyncTask();
 
         try {
-            endpointsAsyncTask.execute(getApplicationContext());
+            new EndpointsAsyncTask().execute(getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,15 +70,34 @@ public class MainActivity extends AppCompatActivity {
 
         private static final String JOKE_EXTRA = "joke_extra";
 
-        private MyEndpoint myEndpointApi = new MyEndpoint();
+        private static MyApi myApiService = null;
         private Context mContext;
 
         @Override
         protected String doInBackground(Context... params) {
 
+            if(myApiService == null) {  // Only do this once
+                MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+                        new AndroidJsonFactory(), null)
+                        .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                            @Override
+                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                abstractGoogleClientRequest.setDisableGZipContent(true);
+                            }
+                        });
+
+                myApiService = builder.build();
+            }
+
             mContext = params[0];
-            Joke joke = myEndpointApi.getJoke();
-            return joke.getJoke();
+
+            try {
+                return myApiService.getJoke().execute().getJoke();
+            } catch (IOException e) {
+                return e.getMessage();
+            }
+
 
         }
 
