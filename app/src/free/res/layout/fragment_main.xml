@@ -31,4 +31,6 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
 
+
+
 </RelativeLayout>

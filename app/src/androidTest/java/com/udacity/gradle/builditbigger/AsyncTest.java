@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.udacity.gradle.builditbigger.backend.myApi.model.Joke;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +14,7 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.CountDownLatch;
 
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class AsyncTest {
@@ -32,9 +35,8 @@ public class AsyncTest {
 
             @Override
             protected void onPostExecute(String result) {
-                super.onPostExecute(result);
 
-                assertNotNull(result);
+                assertEquals("Chuck Norris' tears cure cancer. \n Too bad he has never cried.", result);
 
                 signal.countDown();
 

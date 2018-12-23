@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 public class JokeDisplayActivity extends AppCompatActivity {
 
+    public static final String JOKE_EXTRA = "joke_extra";
+
     private String mJokeString;
     private TextView mJokeTextView;
 
@@ -19,7 +21,7 @@ public class JokeDisplayActivity extends AppCompatActivity {
         Intent jokeIntent = getIntent();
 
         if(jokeIntent != null){
-            mJokeString = jokeIntent.getStringExtra("joke_extra");
+            mJokeString = jokeIntent.getStringExtra(JOKE_EXTRA);
         }
 
         mJokeTextView = findViewById(R.id.tv_joke_display);

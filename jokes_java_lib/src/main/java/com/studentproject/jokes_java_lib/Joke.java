@@ -2,7 +2,7 @@ package com.studentproject.jokes_java_lib;
 
 public class Joke {
 
-    private String joke = "Chuck Norris' tears cure cancer. \n Too bad he has never cried.";
+    private String joke = "Chuck Norris' tears cure cancer. Too bad he has never cried.";
 
     public String getJoke() {
         return joke;
